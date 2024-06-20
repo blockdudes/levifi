@@ -6,6 +6,8 @@ import { leverage_contract_address } from '@/constant/constant';
 import { v4 as uuidv4 } from 'uuid';
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx";
 import { contract_execute_msg } from '@/constant/executeContractFunctions';
+import { fetchUserData } from "@/lib/features/userDataInteractSlice";
+import { useDispatch } from "react-redux"
 
 const tokens = [
   { name: 'USDC', symbol: 'USDC' },
@@ -18,13 +20,31 @@ const Swap = ({ onOrderCreated }) => {
   const [amount, setAmount] = useState(1);
   const [result, setResult] = useState(0);
   const [rate, setRate] = useState(null);
+  const [balance, setBalance] = useState(0);
+
+
   const signerData = useSelector(state => state.connectWallet);
+  const user_asset = useSelector(state => state.userDataInteract);
+  const dispatch = useDispatch();
+
+  console.log(signerData);
+
+  console.log(user_asset);
 
   useEffect(() => {
     if (amount > 0) {
       fetchRate(firstToken, secondToken);
     }
-  }, [firstToken, secondToken, amount]);
+    console.log("chala")
+    fetch_balance()
+  }, [firstToken, secondToken, amount, user_asset]);
+
+  useEffect(() => {
+    if (signerData?.signer) {
+        dispatch(fetchUserData({ signer: signerData?.signer, clientSigner: signerData?.clientSigner }));
+    }
+  }, [signerData])
+
 
   const fetchRate = async (sellToken, buyToken) => {
     try {
@@ -96,9 +116,9 @@ const Swap = ({ onOrderCreated }) => {
       }
       const create_order_message = contract_execute_msg(signerData?.signer, leverage_contract_address, message, [])
       const default_fee = { amount: [{ amount: "50000", denom: "aconst" }], gas: "2000000" };
-      // const sign_message = await signerData?.client?.sign(signerData?.signer, [create_order_message], default_fee, "create a new order");
+      const sign_message = await signerData?.client?.sign(signerData?.signer, [create_order_message], default_fee, "create a new order");
 
-      // await axios.post('http://localhost:5000/add_order', new_order);
+      await axios.post('http://localhost:5000/add_order', new_order);
 
       const created_order = {
         order_id: orderId,
@@ -122,20 +142,40 @@ const Swap = ({ onOrderCreated }) => {
     setSecondToken(tempToken);
   };
 
+
+  const fetch_balance = () => {
+
+    console.log("balance fetch")
+
+    if (firstToken === "USDC") {
+      setBalance(user_asset?.usdc?.v_token_balance);
+    } else {
+      console.log("IDHAR")
+      console.log(user_asset?.native?.v_token_balance)
+      setBalance(user_asset?.native?.v_token_balance)
+    }
+  }
+
   return (
     <div className="max-w-md mx-auto rounded-3xl">
       <div className="text-center text-white font-bold my-4">Create Order</div>
       <div className="">
         <div className="flex z-0 justify-between items-center h-[100px] bg-gray-800 p-4 border border-gray-600 rounded-lg">
-          <select
-            value={firstToken}
-            onChange={(e) => handleFirstTokenChange(e.target.value)}
-            className="bg-gray-800 p-2 text-white outline-none"
-          >
-            {tokens.map(token => (
-              <option key={token.symbol} value={token.symbol}>{token.name}</option>
-            ))}
-          </select>
+          <div>
+            <select
+              value={firstToken}
+              onChange={(e) => handleFirstTokenChange(e.target.value)}
+              className="bg-gray-800 p-2 text-white outline-none"
+            >
+              {tokens.map(token => (
+                <option key={token.symbol} value={token.symbol}>{token.name}</option>
+              ))}
+            </select>
+            <div className="pl-3 flex text-[13px] text-gray-500">
+              <p>Balance: </p>
+              <p className="pl-2">{balance}</p>
+            </div>
+          </div>
           <input
             type="text"
             value={amount}
@@ -174,9 +214,10 @@ const Swap = ({ onOrderCreated }) => {
         <button
           onClick={handleCreateOrder}
           className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 mt-4 rounded-full focus:outline-none focus:shadow-outline"
-          type="button"
+          type="button" 
+          disabled={amount > balance}
         >
-          Create
+          {Number(amount) > Number(balance) ? "Insufficient Balance" : "Create"}
         </button>
       </div>
     </div>

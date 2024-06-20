@@ -14,6 +14,8 @@ const ExchangePage = () => {
   const signerData = useSelector(state => state.connectWallet);
   const orderData = useSelector(state => state.userDataInteract.orders);
 
+  console.log(orderData)
+
   useEffect(() => {
     if (signerData?.signer) {
       const created_orders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -81,7 +83,7 @@ const ExchangePage = () => {
                 <th scope="col" className="px-6 py-3">Time</th>
               </tr>
             </thead>
-            <tbody className="max-h-96 overflow-y-scroll border">
+            <tbody className="max-h-96 overflow-y-scroll">
               {orders.map((order, index) => (
                 <tr key={index} className="hover:bg-gray-700">
                   <td className="px-6 py-4">{order.order_id}</td>
@@ -90,7 +92,7 @@ const ExchangePage = () => {
                   <td className="px-6 py-4">{order.sell_token_amount}</td>
                   <td className="px-6 py-4">{order.buy_token_amount}</td>
                   <td className="px-6 py-4">{order.status}</td>
-                  <td className="px-6 py-4">{new Date(order.time * 1000).toLocaleString()}</td>
+                  <td className="px-6 py-4">{new Date(order.time).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

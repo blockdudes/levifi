@@ -5,7 +5,7 @@ export const pubkey = new paillierBigint.PublicKey(
     1678481375462202042297541766968126908462n
 );
 
-export const leverage_contract_address = "archway1gxu4xla8w8zmjlp6lu6ztzlfetzhz6gfz7hz0tupqhxmwa4t0g8q000ref";
+export const leverage_contract_address = "archway1jcplqkzx6e8rq05ckz0w6p8mv0juc4vh9cmpqvxlzhclrqnwc7dqq5qkgr";
 export const usdc_contract_address = "archway1hcctxstwswmctpk0zkj0f06fy3he38akujp5pvxf3754wl7pyw9sjmzyh5";
 
 export const usdc_token_name = "USDC"

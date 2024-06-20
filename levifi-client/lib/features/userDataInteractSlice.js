@@ -21,9 +21,9 @@ export const fetchUserData = createAsyncThunk("/fetch/userData", async ({ signer
                     { [queryBalanceMethod.method]: { token_address: token.address, user_address: signer } }
                 );
                 if (token.name === "native") {
-                    query_balances[token.name][queryBalanceMethod.key] = parseFloat(response/(10**18));
+                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**18))).slice(0, 5);
                 } else {
-                    query_balances[token.name][queryBalanceMethod.key] = parseFloat(response/(10**6));
+                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**6))).slice(0, 5);
                 }
             }
         }
@@ -32,7 +32,14 @@ export const fetchUserData = createAsyncThunk("/fetch/userData", async ({ signer
             leverage_contract_address,
             { user_orders: { user_address: signer } }
         )
-        return { query: query_balances, orders: orders_response };
+
+        const updatedOrders = orders_response.map(order => ({
+            ...order,
+            time: Number(order.time) / 1000
+          }));
+
+        console.log(updatedOrders);
+        return { query: query_balances, orders: updatedOrders };
     } catch (error) {
         console.log(error)
         return rejectWithValue("User Query Failed!");
@@ -52,7 +59,7 @@ const userDataInteractSlice = createSlice({
             state.error = null;
             state.native = action.payload?.query.native;
             state.usdc = action.payload?.query.usdc;
-            state.order = action.payload?.orders;
+            state.orders = action.payload?.orders;
         });
 
         builder.addCase(fetchUserData.rejected, (state, action) => {

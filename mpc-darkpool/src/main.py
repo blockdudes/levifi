@@ -29,10 +29,6 @@ from cosmpy.aerial.contract import LedgerContract
 from cosmpy.aerial.client import LedgerClient, NetworkConfig, Address
 
 
-# wallet = LocalWallet.from_mnemonic("cattle boat useless rib few stumble robust arrive early pledge tortoise clip")
-# print("wallet", wallet)
-
-
 app = FastAPI()
 
 origins = [
@@ -288,7 +284,7 @@ async def binary_search_and_partial_decrypt(cumulative_sums, target_value, match
             low = mid + 1
         else:
             high = mid
-
+            
     partial_matched_orders = orders[:low + 1]
     remaining_encrypted_value = cumulative_sums[low] - target_value
 
@@ -296,6 +292,7 @@ async def binary_search_and_partial_decrypt(cumulative_sums, target_value, match
         encrypted_order_value = PaillierCiphertext(int(order['encrypted_order_value']), app.distribute_scema[0])
         decrypted_order_value = await decrypt_all_orders([encrypted_order_value])
         matched_orders.append({
+            'order_id': order['order_id'],
             'user_address': order['user_address'],
             'selectedMarket': order['selectedMarket'],
             'status': order['status'],
@@ -313,6 +310,7 @@ async def binary_search_and_partial_decrypt(cumulative_sums, target_value, match
         order = await decrypt_all_orders([temp])
 
         matched_orders.append({
+            'order_id': partial_order['order_id'],
             'user_address': partial_order['user_address'],
             'selectedMarket': partial_order['selectedMarket'],
             'status': partial_order['status'],
@@ -337,11 +335,10 @@ async def binary_search_and_partial_decrypt(cumulative_sums, target_value, match
 async def execute_orders_osmosis_internal():
     # print("decrypt", await decrypt_all_orders([PaillierCiphertext(810204001075069181365450675581913177600018489857778512943088584482130287613395,app.distribute_scema[0])]))
     # return
-    print("osmosis order state")
     orders = load_orders()
     
-    osmo_to_usdc_orders = [order for order in orders if order['sellToken'] == 'OSMO' and order['buyToken'] == 'USDC']
-    usdc_to_osmo_orders = [order for order in orders if order['sellToken'] == 'USDC' and order['buyToken'] == 'OSMO']
+    osmo_to_usdc_orders = [order for order in orders if order['sellToken'] == 'ARCH' and order['buyToken'] == 'USDC']
+    usdc_to_osmo_orders = [order for order in orders if order['sellToken'] == 'USDC' and order['buyToken'] == 'ARCH']
     encrypted_zero = encrypt_zero(app.distribute_scema[0])
 
     osmo_to_usdc_sum = await sum_encrypted_values(osmo_to_usdc_orders)
@@ -390,6 +387,8 @@ async def execute_orders_osmosis_internal():
             'chain': order['chain'],
             'encrypted_order_value': abs(int(decrypted_order_value[0]))
         })
+    
+    # print(matched_orders, larger_orders)
 
     matched_orders, updated_orders = await binary_search_and_partial_decrypt(cumulative_sums, smaller_sum, matched_orders, larger_orders)
     await execute_osmosis_matched_orders(matched_orders)
@@ -451,6 +450,7 @@ async def execute_orders_internal():
             'encrypted_order_value': abs(int(decrypted_order_value[0]))
         })
     
+    
     matched_orders, updated_orders = await binary_search_and_partial_decrypt(cumulative_sums, smaller_sum, matched_orders, larger_orders)
     await execute_matched_orders(matched_orders)
     save_orders(updated_orders)
@@ -487,6 +487,8 @@ async def execute_osmosis_matched_orders(request: List[dict]):
                 }
             }
             
+            print(message)
+            
             exe_response = requests.post("http://localhost:3000/api/execute", json=message)
             print(exe_response.json())
             
@@ -497,7 +499,7 @@ async def execute_osmosis_matched_orders(request: List[dict]):
             # print(f"Sent order to {order['chain']} chain, tx hash: {execute._tx_hash}")
             
             
-            return {"message": "Orders executed on all chains"}
+        return {"message": "Orders executed on all chains"}
     except Exception as e:
         print(f"Error executing matched orders: {e}")
         raise HTTPException(status_code=500, detail=str(e))

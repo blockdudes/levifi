@@ -78,7 +78,7 @@ pub mod burn_tokens {
                         Ok(data) => Ok(data),
                         Err(_) => Err(ContractError::Overflow {}),
                     },
-                    None => Ok(Uint128::zero()),
+                    None => Ok(user_collateral_amount),
                 }
             },
         )?;
@@ -96,6 +96,20 @@ pub mod burn_tokens {
                     None => Ok(token_data.token_amount),
                 }
             },
+        )?;
+
+        USER_VTOKEN_BALANCE.update(
+            deps.storage,
+            (&token_data.token_address, &info.sender),
+            |opt_balance| -> Result<Uint128, ContractError> {
+                match opt_balance {
+                    Some(balance) => match balance.checked_sub(token_data.token_amount) {
+                        Ok(data) => Ok(data),
+                        Err(_) => Err(ContractError::Overflow {}),
+                    },
+                    None => return Err(ContractError::GenericError { error: String::from("doesn't have v tokens") }),
+                }
+            }
         )?;
 
         Ok(Response::new())

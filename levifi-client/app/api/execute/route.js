@@ -27,8 +27,12 @@ export const POST = async (request) => {
     const client = await SigningCosmWasmClient.connectWithSigner(archwayTestnetOptions.rpcEndpoint, wallet, { gasPrice });
 
     const message = await request.json();
+    console.log(message);
     const exe_message = contract_execute_msg(addr, leverage_contract_address, message, []);
+    console.log(exe_message);
     const execute_transaction = await client.signAndBroadcast(addr, [exe_message], default_fee, "")
+
+    console.log(execute_transaction)
     return Response.json({ txHash: execute_transaction.transactionHash }, { status: 200 })
   } catch (error) {
     return Response.error({ error }, { status: 500 })

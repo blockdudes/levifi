@@ -54,7 +54,7 @@ pub mod exchange_tokens {
 
         ORDER_STATE.update(
             deps.storage,
-            &_info.sender,
+            &order.user_address,
             |opt_data| -> Result<Vec<OrderState>, ContractError> {
                 match opt_data {
                     Some(mut data) => {
