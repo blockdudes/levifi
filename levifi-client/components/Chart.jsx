@@ -13,7 +13,7 @@ function Chart() {
       script.innerHTML = `
         {
           "autosize": true,
-          "symbol": "OSMOSIS:ARCHUSD",
+          "symbol": "COINEX:ARCHUSDT",
           "interval": "D",
           "timezone": "Etc/UTC",
           "theme": "dark",

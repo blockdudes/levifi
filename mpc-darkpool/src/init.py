@@ -52,10 +52,6 @@ print("The protocol has completed.")
 print(distributed_paillier_schemes[0].public_key.serialize())
 with open('src/store/publickey.json', 'w') as f:
     json.dump(distributed_paillier_schemes[0].public_key.serialize(), f)
-# print(distributed_paillier_scheme.serialize_with_secret_key())
-# daa = DistributedPaillier.serialize_with_secret_key(distributed_paillier_scheme)
-# print(daa)
-# print(type(daa))
 
 # Serialize and save the private keys
 for party_number in range(PARTIES):
@@ -71,18 +67,3 @@ for party_number in range(PARTIES):
     with open(f"src/store/{party_number}.pkl", 'wb') as file:
         pickle.dump(data, file)
 
-# for party_number in range(PARTIES):
-
-# # for distributed_paillier_scheme in distributed_paillier_schemes[0]:
-#     distributed_paillier_scheme = distributed_paillier_schemes[party_number]
-#     print(distributed_paillier_scheme.secret_key.serialize())
-#     with open(f"src/store/{party_number}.pkl", 'wb') as file: 
-#         print(distributed_paillier_scheme.serialize_with_secret_key())
-#         paillier = distributed_paillier_scheme.serialize_with_secret_key()
-#         shares = distributed_paillier_scheme.shares
-#         data = {
-#             "paillier": paillier,
-#             "shares": shares
-#         }
-#         # A new file will be created 
-#         pickle.dump(data, file) 

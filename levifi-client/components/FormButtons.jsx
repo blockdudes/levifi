@@ -72,15 +72,15 @@ const FormButtons = () => {
     if (res) setSuccess(true);
   };
 
-  const call_handle_burn = async () => {
-    let res;
-    if (tokenAddress === "ARCH") {
-      res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
-    } else {
-      res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
-    }
-    if (res) setSuccess(true);
-  };
+  // const call_handle_burn = async () => {
+  //   let res;
+  //   if (tokenAddress === "ARCH") {
+  //     res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
+  //   } else {
+  //     res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
+  //   }
+  //   if (res) setSuccess(true);
+  // };
 
   return (
     <div className="flex flex-col h-fit bg-grey-900[0.4] text-gray-100 w-[400px]">
@@ -165,26 +165,7 @@ const FormButtons = () => {
             )}
           </div>
         </div>
-        <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'burn' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('burn')}
-        >
-          <p className='text-center'>Burn</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'burn' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'burn' && (
-              <div className="mt-4 p-4 rounded-lg">
-                <TokenSelectorMenu setTokenAddress={setTokenAddress} />
-                <input
-                  type="text"
-                  placeholder="Enter burn amount"
-                  className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_burn}>Submit</button>
-              </div>
-            )}
-          </div>
-        </div>
+
       </div>
     </div>
   );
