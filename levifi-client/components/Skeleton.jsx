@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Skeleton = ({ width, height }) => {
+const Skeleton = () => {
   return (
-    <div className={`bg-gray-700 animate-pulse ${width} ${height}`}></div>
+    <div className={`bg-gray-700 animate-pulse w-full h-6`}></div>
   );
 };
 

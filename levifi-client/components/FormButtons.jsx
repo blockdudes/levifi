@@ -1,8 +1,14 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import TokenSelectorMenu from './TokenSelectorMenu';
-import { handle_deposit, handle_borrow, handle_repay, handle_withdraw, handle_burn } from "@/constant/executeContractFunctions";
-import { useSelector, useDispatch } from 'react-redux';
+"use client";
+import React, { useEffect, useState } from "react";
+import TokenSelectorMenu from "./TokenSelectorMenu";
+import {
+  handle_deposit,
+  handle_borrow,
+  handle_repay,
+  handle_withdraw,
+  handle_burn,
+} from "@/constant/executeContractFunctions";
+import { useSelector, useDispatch } from "react-redux";
 import { leverage_contract_address } from "@/constant/constant";
 import { fetchUserData } from "@/lib/features/userDataInteractSlice";
 import { usdc_contract_address } from "@/constant/constant";
@@ -14,8 +20,7 @@ const FormButtons = () => {
   const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
 
-  const signerData = useSelector(state => state.connectWallet);
-
+  const signerData = useSelector((state) => state.connectWallet);
 
   const handleButtonClick = (formName) => {
     setActiveForm(formName);
@@ -23,7 +28,12 @@ const FormButtons = () => {
 
   useEffect(() => {
     if (success) {
-      dispatch(fetchUserData({ signer: signerData.signer, clientSigner: signerData.clientSigner }));
+      dispatch(
+        fetchUserData({
+          signer: signerData.signer,
+          clientSigner: signerData.clientSigner,
+        })
+      );
       setSuccess(false);
     }
   }, [success, signerData, dispatch]);
@@ -32,10 +42,28 @@ const FormButtons = () => {
     let res;
     if (tokenAddress === "ARCH") {
       const message = { deposit_native: { token_address: "ARCH" } };
-      res = await handle_deposit(signerData?.signer, signerData?.client, message, leverage_contract_address, [{ denom: "aconst", amount: String(Number(amount) * (10 ** 18)) }]);
+      res = await handle_deposit(
+        signerData?.signer,
+        signerData?.client,
+        message,
+        leverage_contract_address,
+        [{ denom: "aconst", amount: String(Number(amount) * 10 ** 18) }]
+      );
     } else {
-      const message = { send: { contract: leverage_contract_address, amount: String(Number(amount) * (10 ** 6)), msg: btoa("") } };
-      res = await handle_deposit(signerData?.signer, signerData?.client, message, usdc_contract_address, []);
+      const message = {
+        send: {
+          contract: leverage_contract_address,
+          amount: String(Number(amount) * 10 ** 6),
+          msg: btoa(""),
+        },
+      };
+      res = await handle_deposit(
+        signerData?.signer,
+        signerData?.client,
+        message,
+        usdc_contract_address,
+        []
+      );
     }
     if (res) setSuccess(true);
   };
@@ -43,9 +71,21 @@ const FormButtons = () => {
   const call_handle_borrow = async () => {
     let res;
     if (tokenAddress === "ARCH") {
-      res = await handle_borrow(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
+      res = await handle_borrow(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 18)
+      );
     } else {
-      res = await handle_borrow(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
+      res = await handle_borrow(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 6)
+      );
     }
     if (res) setSuccess(true);
   };
@@ -53,9 +93,21 @@ const FormButtons = () => {
   const call_handle_repay = async () => {
     let res;
     if (tokenAddress === "ARCH") {
-      res = await handle_repay(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
+      res = await handle_repay(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 18)
+      );
     } else {
-      res = await handle_repay(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
+      res = await handle_repay(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 6)
+      );
     }
     if (res) setSuccess(true);
   };
@@ -63,11 +115,37 @@ const FormButtons = () => {
   const call_handle_withdraw = async () => {
     let res;
     if (tokenAddress === "ARCH") {
-      const message = { withdraw_token: { token_address: tokenAddress, token_amount: String(Number(amount) * (10 ** 18)), withdraw_type: "native", native: "aconst", usdc: null } };
-      res = await handle_withdraw(signerData?.signer, signerData?.client, leverage_contract_address, message);
+      const message = {
+        withdraw_token: {
+          token_address: tokenAddress,
+          token_amount: String(Number(amount) * 10 ** 18),
+          withdraw_type: "native",
+          native: "aconst",
+          usdc: null,
+        },
+      };
+      res = await handle_withdraw(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        message
+      );
     } else {
-      const message = { withdraw_token: { token_address: tokenAddress, token_amount: String(Number(amount) * (10 ** 6)), withdraw_type: "fungible", native: null, usdc: usdc_contract_address } };
-      res = await handle_withdraw(signerData?.signer, signerData?.client, leverage_contract_address, message);
+      const message = {
+        withdraw_token: {
+          token_address: tokenAddress,
+          token_amount: String(Number(amount) * 10 ** 6),
+          withdraw_type: "fungible",
+          native: null,
+          usdc: usdc_contract_address,
+        },
+      };
+      res = await handle_withdraw(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        message
+      );
     }
     if (res) setSuccess(true);
   };
@@ -75,9 +153,21 @@ const FormButtons = () => {
   const call_handle_burn = async () => {
     let res;
     if (tokenAddress === "ARCH") {
-      res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
+      res = await handle_burn(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 18)
+      );
     } else {
-      res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
+      res = await handle_burn(
+        signerData?.signer,
+        signerData?.client,
+        leverage_contract_address,
+        tokenAddress,
+        String(Number(amount) * 10 ** 6)
+      );
     }
     if (res) setSuccess(true);
   };
@@ -86,12 +176,20 @@ const FormButtons = () => {
     <div className="flex flex-col h-fit bg-grey-900[0.4] text-gray-100 w-[400px]">
       <div className="w-full max-w-md mx-auto space-y-4 p-6 rounded-lg">
         <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'deposit' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('deposit')}
+          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
+            activeForm === "deposit" ? "border-blue-500" : "border-gray-700"
+          }`}
+          onClick={() => handleButtonClick("deposit")}
         >
-          <p className='text-center'>Deposit</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'deposit' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'deposit' && (
+          <p className="text-center">Deposit</p>
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              activeForm === "deposit"
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            {activeForm === "deposit" && (
               <div className="mt-4 p-4 rounded-lg">
                 <TokenSelectorMenu setTokenAddress={setTokenAddress} />
                 <input
@@ -100,18 +198,31 @@ const FormButtons = () => {
                   className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_deposit}>Submit</button>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full"
+                  onClick={call_handle_deposit}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>
         </div>
         <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'withdraw' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('withdraw')}
+          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
+            activeForm === "withdraw" ? "border-blue-500" : "border-gray-700"
+          }`}
+          onClick={() => handleButtonClick("withdraw")}
         >
-          <p className='text-center'>Withdraw</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'withdraw' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'withdraw' && (
+          <p className="text-center">Withdraw</p>
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              activeForm === "withdraw"
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            {activeForm === "withdraw" && (
               <div className="mt-4 p-4 rounded-lg">
                 <TokenSelectorMenu setTokenAddress={setTokenAddress} />
                 <input
@@ -120,18 +231,31 @@ const FormButtons = () => {
                   className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_withdraw}>Submit</button>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full"
+                  onClick={call_handle_withdraw}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>
         </div>
         <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'borrow' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('borrow')}
+          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
+            activeForm === "borrow" ? "border-blue-500" : "border-gray-700"
+          }`}
+          onClick={() => handleButtonClick("borrow")}
         >
-          <p className='text-center'>Borrow</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'borrow' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'borrow' && (
+          <p className="text-center">Borrow</p>
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              activeForm === "borrow"
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            {activeForm === "borrow" && (
               <div className="mt-4 p-4 rounded-lg">
                 <TokenSelectorMenu setTokenAddress={setTokenAddress} />
                 <input
@@ -140,18 +264,31 @@ const FormButtons = () => {
                   className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_borrow}>Submit</button>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full"
+                  onClick={call_handle_borrow}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>
         </div>
         <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'repay' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('repay')}
+          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
+            activeForm === "repay" ? "border-blue-500" : "border-gray-700"
+          }`}
+          onClick={() => handleButtonClick("repay")}
         >
-          <p className='text-center'>Repay</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'repay' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'repay' && (
+          <p className="text-center">Repay</p>
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              activeForm === "repay"
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            {activeForm === "repay" && (
               <div className="mt-4 p-4 rounded-lg">
                 <TokenSelectorMenu setTokenAddress={setTokenAddress} />
                 <input
@@ -160,18 +297,31 @@ const FormButtons = () => {
                   className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_repay}>Submit</button>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full"
+                  onClick={call_handle_repay}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>
         </div>
         <div
-          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${activeForm === 'burn' ? 'border-blue-500' : 'border-gray-700'}`}
-          onClick={() => handleButtonClick('burn')}
+          className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
+            activeForm === "burn" ? "border-blue-500" : "border-gray-700"
+          }`}
+          onClick={() => handleButtonClick("burn")}
         >
-          <p className='text-center'>Burn</p>
-          <div className={`transition-all duration-500 ease-in-out overflow-hidden ${activeForm === 'burn' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-            {activeForm === 'burn' && (
+          <p className="text-center">Burn</p>
+          <div
+            className={`transition-all duration-500 ease-in-out overflow-hidden ${
+              activeForm === "burn"
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            }`}
+          >
+            {activeForm === "burn" && (
               <div className="mt-4 p-4 rounded-lg">
                 <TokenSelectorMenu setTokenAddress={setTokenAddress} />
                 <input
@@ -180,7 +330,12 @@ const FormButtons = () => {
                   className="w-full px-3 py-2 rounded border border-gray-700 bg-gray-800 text-white"
                   onChange={(e) => setAmount(e.target.value)}
                 />
-                <button className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full" onClick={call_handle_burn}>Submit</button>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 rounded-lg w-full"
+                  onClick={call_handle_burn}
+                >
+                  Submit
+                </button>
               </div>
             )}
           </div>

@@ -17,9 +17,11 @@ export const POST = async (request) => {
 
   try {
 
+    console.log(process.env.MNEMONICS);
+
     const default_fee = { amount: [{ amount: "510000000000000000", denom: "aconst" }], gas: "3000000" };
 
-    const mnemonic = "cattle boat useless rib few stumble robust arrive early pledge tortoise clip";
+    const mnemonic = process.env.MNEMONICS;
     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, { prefix: "archway" });
     const [account] = await wallet.getAccounts();
     const addr = account.address;

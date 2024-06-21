@@ -1,9 +1,8 @@
-import React from 'react'
-import Link from 'next/link'
-import UserStats from '@/components/UserStats'
-import FormButtons from '@/components/FormButtons'
+import React from "react";
+import UserStats from "@/components/UserStats";
+import FormButtons from "@/components/FormButtons";
 
-const Dashboard = () => {
+export default function Dashboard() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-gray-100">
       <div className="bg-black/[0.6] p-6 rounded-3xl shadow-md border border-gray-600 w-full max-w-4xl mx-auto">
@@ -15,9 +14,8 @@ const Dashboard = () => {
             <FormButtons />
           </div>
         </div>
-        </div>
+      </div>
     </div>
-  )
+  );
 }
-
-export default Dashboard
+export const dynamic = "force-dynamic";

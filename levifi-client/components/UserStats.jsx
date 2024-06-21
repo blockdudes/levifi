@@ -4,13 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchUserData } from '@/lib/features/userDataInteractSlice';
 import BalancesTable from './BalancesTable';
 
-const UserStats = () => {
+export default function UserStats() {
   const signerData = useSelector(state => state.connectWallet);
 
-
   const dispatch = useDispatch();
-  const signerAssetData = useSelector(state => state.userDataInteract);
-
   useEffect(() => {
     if (signerData?.clientSigner) {
       dispatch(fetchUserData({ signer: signerData.signer, clientSigner: signerData.clientSigner }))
@@ -25,5 +22,3 @@ const UserStats = () => {
     </div>
   )
 }
-
-export default UserStats

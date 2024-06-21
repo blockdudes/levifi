@@ -1,11 +1,12 @@
+"use client"
+import React from "react";
+import { useSelector } from "react-redux";
+import Skeleton from "./Skeleton";
 
-import React from 'react';
-import { useSelector } from 'react-redux';
-import Skeleton from './Skeleton';
-
-const BalancesTable = () => {
-  const { native, usdc, loading } = useSelector(state => state.userDataInteract);
-
+export default function BalancesTable() {
+  const { native, usdc, loading } = useSelector(
+    (state) => state.userDataInteract
+  );
   return (
     <div className="bg-transparent p-4 rounded-lg">
       <div className="overflow-x-auto">
@@ -21,40 +22,40 @@ const BalancesTable = () => {
             <tr className="bg-gray-800/[0.2] border-b border-t border-gray-700">
               <td className="px-6 py-4">Collateral Balance</td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : native?.collateral_balance}
+                {loading ? <Skeleton /> : native?.collateral_balance}
               </td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : usdc?.collateral_balance}
+                {loading ? <Skeleton /> : usdc?.collateral_balance}
               </td>
             </tr>
 
             <tr className="bg-gray-800/[0.2] border-b border-t border-gray-700">
               <td className="px-6 py-4">Borrow Allowance</td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : native?.wrapped_leverage_balance}
+                {loading ? <Skeleton /> : native?.wrapped_leverage_balance}
               </td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : usdc?.wrapped_leverage_balance}
+                {loading ? <Skeleton /> : usdc?.wrapped_leverage_balance}
               </td>
             </tr>
 
             <tr className="bg-gray-800/[0.2] border-b border-t border-gray-700">
               <td className="px-6 py-4">Borrowed Balance</td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : native?.borrow_balance}
+                {loading ? <Skeleton /> : native?.borrow_balance}
               </td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : usdc?.borrow_balance}
+                {loading ? <Skeleton /> : usdc?.borrow_balance}
               </td>
             </tr>
 
             <tr className="bg-gray-800/[0.2] border-b border-t border-gray-700">
               <td className="px-6 py-4">V token balance</td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : native?.v_token_balance}
+                {loading ? <Skeleton /> : native?.v_token_balance}
               </td>
               <td className="px-6 py-4">
-                {loading ? <Skeleton width="w-full" height="h-6" /> : usdc?.v_token_balance}
+                {loading ? <Skeleton /> : usdc?.v_token_balance}
               </td>
             </tr>
           </tbody>
@@ -62,6 +63,4 @@ const BalancesTable = () => {
       </div>
     </div>
   );
-};
-
-export default BalancesTable;
+}
