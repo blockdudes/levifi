@@ -150,7 +150,6 @@ const FormButtons = () => {
     if (res) setSuccess(true);
   };
 
-<<<<<<< HEAD
   const call_handle_burn = async () => {
     let res;
     if (tokenAddress === "ARCH") {
@@ -172,17 +171,6 @@ const FormButtons = () => {
     }
     if (res) setSuccess(true);
   };
-=======
-  // const call_handle_burn = async () => {
-  //   let res;
-  //   if (tokenAddress === "ARCH") {
-  //     res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 18)));
-  //   } else {
-  //     res = await handle_burn(signerData?.signer, signerData?.client, leverage_contract_address, tokenAddress, String(Number(amount) * (10 ** 6)));
-  //   }
-  //   if (res) setSuccess(true);
-  // };
->>>>>>> af462bc2131cc50a3229889b47228975baae24e0
 
   return (
     <div className="flex flex-col h-fit bg-grey-900[0.4] text-gray-100 w-[400px]">
@@ -319,7 +307,6 @@ const FormButtons = () => {
             )}
           </div>
         </div>
-<<<<<<< HEAD
         <div
           className={`bg-[#2550C0]/[0.21] w-full py-4 rounded-lg border ${
             activeForm === "burn" ? "border-blue-500" : "border-gray-700"
@@ -353,9 +340,6 @@ const FormButtons = () => {
             )}
           </div>
         </div>
-=======
-
->>>>>>> af462bc2131cc50a3229889b47228975baae24e0
       </div>
     </div>
   );
