@@ -14,7 +14,7 @@ export default function BalancesTable() {
           <thead className="text-xs text-white uppercase bg-gray-700/[0.3]">
             <tr>
               <th className="px-6 py-3">Balances</th>
-              <th className="px-6 py-3">Native</th>
+              <th className="px-6 py-3">ARCH</th>
               <th className="px-6 py-3">USDC</th>
             </tr>
           </thead>

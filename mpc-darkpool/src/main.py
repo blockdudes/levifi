@@ -60,34 +60,6 @@ app.config = {
     'KEY_LENGTH': 128,
     'PRIME_THRESHOLD': 2000,
     'CORRUPTION_THRESHOLD': 1,
-    'CONTRACTS': {
-        'amoy': {
-            'RPC': "https://polygon-amoy.g.alchemy.com/v2/SjhJtJ8sLClggBUwq9sJ72HMC4rOjJjE",
-            'ADDRESS': "0x32A96ce7203a5257785D801576a61B06e87A5279"
-        },
-        'arb': {
-            'RPC': "https://arb-sepolia.g.alchemy.com/v2/8kt_9nM3xUNeRw9EtlZq6OPaHEf8xmTv",
-            'ADDRESS': "0x31333dA7AAcbE968310e09279bda1dD8dE14d805"
-        },
-        'avax': {
-            'RPC': "https://avalanche-fuji-c-chain-rpc.publicnode.com",
-            'ADDRESS': "0x18Bb384D85A2E613C89F6cD00eBE936f5370A68c"
-        }
-    },
-    'TOKEN_ADDRESSES': {
-        'amoy': {
-            'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            'USDC': '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582'
-        },
-        'arb': {
-            'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            'USDC': '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d'
-        },
-        'avax': {
-            'ETH': '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-            'USDC': '0x5425890298aed601595a70AB815c96711a31Bc65'
-        }
-    }
 }
 
 class Order(BaseModel):
@@ -458,7 +430,6 @@ async def execute_orders_internal():
 
 async def execute_osmosis_matched_orders(request: List[dict]):
     try:
-        wallet, contract = get_wallet_and_contract()
         headers = {
             "X-CMC_PRO_API_KEY": "99e8b7ac-34a8-4b56-9ac3-a00ce4165050"
         }
