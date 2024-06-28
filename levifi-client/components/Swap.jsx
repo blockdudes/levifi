@@ -116,7 +116,7 @@ const Swap = ({ onOrderCreated }) => {
         }
       }
       const create_order_message = contract_execute_msg(signerData?.signer, leverage_contract_address, message, [])
-      const default_fee = { amount: [{ amount: "50000", denom: "aconst" }], gas: "2000000" };
+      const default_fee = { amount: [{ amount: "0", denom: "aconst" }], gas: "0" };
       const sign_message = await signerData?.client?.sign(signerData?.signer, [create_order_message], default_fee, "create a new order");
 
       await axios.post('http://localhost:5000/add_order', new_order);
@@ -126,7 +126,7 @@ const Swap = ({ onOrderCreated }) => {
         sell_token: firstToken,
         buy_token: secondToken,
         sell_token_amount: amount,
-        buy_token_amount: result,
+        buy_token_amount: result.toFixed(4),
         time: new_order.createdAt,
         status: "Pending"
       }

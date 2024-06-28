@@ -20,8 +20,6 @@ from eth_account import Account
 from datetime import datetime
 import requests
 
-from extra import get_wallet_and_contract
-
 # cosmwasm 
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
@@ -338,7 +336,7 @@ async def execute_orders_osmosis_internal():
             encrypted_order_value = PaillierCiphertext(int(order['encrypted_order_value']), app.distribute_scema[0])
             decrypted_order_value = await decrypt_all_orders([encrypted_order_value])
             order['encrypted_order_value'] = abs(int(decrypted_order_value[0]))
-        await execute_matched_orders(matched_orders)
+        await execute_osmosis_matched_orders(matched_orders)
         save_orders([])
         return {"matched_orders": matched_orders, "remaining_orders": []}
 

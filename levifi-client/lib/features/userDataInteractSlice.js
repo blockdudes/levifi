@@ -21,9 +21,10 @@ export const fetchUserData = createAsyncThunk("/fetch/userData", async ({ signer
                     { [queryBalanceMethod.method]: { token_address: token.address, user_address: signer } }
                 );
                 if (token.name === "native") {
-                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**18))).slice(0, 5);
+                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**18)).toFixed(4));
+                    console.log(query_balances[token.name][queryBalanceMethod.key]);
                 } else {
-                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**6))).slice(0, 5);
+                    query_balances[token.name][queryBalanceMethod.key] = String(parseFloat(response/(10**6)).toFixed(4));
                 }
             }
         }
@@ -33,9 +34,17 @@ export const fetchUserData = createAsyncThunk("/fetch/userData", async ({ signer
             { user_orders: { user_address: signer } }
         )
 
+        // const update = orders_response.map(order => {
+        //     if (order.buy_token)
+        // })
+
+        console.log(orders_response);
+
         const updatedOrders = orders_response.map(order => ({
             ...order,
-            time: Number(order.time) / 1000
+            time: Number(order.time) / 1000,
+            buy_token_amount: order.buy_token === "ARCH" ? String(parseFloat(order.buy_token_amount/(10**18)).toFixed(4)) :  String(parseFloat(order.buy_token_amount/(10**6)).toFixed(4)),
+            sell_token_amount: order.sell_token === "ARCH" ? String(parseFloat(order.sell_token_amount/(10**18)).toFixed(4)) :  String(parseFloat(order.sell_token_amount/(10**6)).toFixed(4)),
           }));
 
         console.log(updatedOrders);
